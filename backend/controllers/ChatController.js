@@ -15,7 +15,7 @@ const createOrRetrieveChat = asyncHandler(async (req, res) => {
   // First check if a chat exists with the above users
   const existingChats = await ChatModel.find({
     $and: [
-      { isGroupChat: false },
+      { isGroupChat: 0 },
       { users: { $elemMatch: { $eq: receiverUserId } } },
       { users: { $elemMatch: { $eq: loggedInUserId } } },
     ],
@@ -37,7 +37,7 @@ const createOrRetrieveChat = asyncHandler(async (req, res) => {
     // If it doesn't exist, then create a new chat
     const createdChat = await ChatModel.create({
       chatName: "reciever",
-      isGroupChat: false,
+      isGroupChat: 0,
       users: [receiverUserId, loggedInUserId],
     });
 
@@ -50,12 +50,132 @@ const createOrRetrieveChat = asyncHandler(async (req, res) => {
   }
 });
 
+const createOrRetrieveTeamChat = asyncHandler(async (req, res) => {
+  const receiverUserId = req.body?.userId;
+  const loggedInUserId = req.user?._id;
+
+  if (!receiverUserId) {
+    res.status(400);
+    throw new Error("UserId not sent in request body");
+  }
+
+  // First check if a chat exists with the above users
+  const existingChats = await ChatModel.find({
+    $and: [
+      { isGroupChat: 1 },
+      { users: { $elemMatch: { $eq: receiverUserId } } },
+      { users: { $elemMatch: { $eq: loggedInUserId } } },
+    ],
+  })
+    .populate("users", "-password -notifications")
+    .populate({
+      path: "lastMessage",
+      model: "Message",
+      populate: {
+        path: "sender",
+        model: "User",
+        select: "name email profilePic",
+      },
+    });
+
+  if (existingChats.length > 0) {
+    res.status(200).json(existingChats[0]);
+  } else {
+    // If it doesn't exist, then create a new chat
+    const createdChat = await ChatModel.create({
+      chatName: "reciever",
+      isGroupChat: 1,
+      users: [receiverUserId, loggedInUserId],
+    });
+
+    const populatedChat = await ChatModel.findById(createdChat._id).populate({
+      path: "users",
+      model: "User",
+      select: "-password -notifications",
+    });
+    res.status(201).json(populatedChat);
+  }
+});
+
+
 const fetchChats = asyncHandler(async (req, res) => {
   const loggedInUserId = req.user?._id;
 
   // Fetch all the chats for the currently logged-in user
   const chats = await ChatModel.find({
-    users: { $elemMatch: { $eq: loggedInUserId } },
+    users: { $elemMatch: { $eq: loggedInUserId } }, isGroupChat: '0'
+  })
+    .populate("users", "-password -notifications")
+    .populate("groupAdmins", "-password -notifications")
+    .populate({
+      path: "lastMessage",
+      model: "Message",
+      // Nested populate in mongoose
+      populate: {
+        path: "sender",
+        model: "User",
+        select: "name email profilePic",
+      },
+    })
+    .sort({ updatedAt: "desc" }); // (latest to oldest)
+
+  res.status(200).json(chats);
+});
+
+const fetchTeamChats = asyncHandler(async (req, res) => {
+  const loggedInUserId = req.user?._id;
+
+  // Fetch all the chats for the currently logged-in user
+  const chats = await ChatModel.find({
+    users: { $elemMatch: { $eq: loggedInUserId }}, isGroupChat: '1'
+  })
+    .populate("users", "-password -notifications")
+    .populate("groupAdmins", "-password -notifications")
+    .populate({
+      path: "lastMessage",
+      model: "Message",
+      // Nested populate in mongoose
+      populate: {
+        path: "sender",
+        model: "User",
+        select: "name email profilePic",
+      },
+    })
+    .sort({ updatedAt: "desc" }); // (latest to oldest)
+
+  res.status(200).json(chats);
+});
+
+const fetchGroupChats = asyncHandler(async (req, res) => {
+  const loggedInUserId = req.user?._id;
+
+  // Fetch all the chats for the currently logged-in user
+  const chats = await ChatModel.find({
+    users: { $elemMatch: { $eq: loggedInUserId }}, isGroupChat: '2'
+  })
+    .populate("users", "-password -notifications")
+    .populate("groupAdmins", "-password -notifications")
+    .populate({
+      path: "lastMessage",
+      model: "Message",
+      // Nested populate in mongoose
+      populate: {
+        path: "sender",
+        model: "User",
+        select: "name email profilePic",
+      },
+    })
+    .sort({ updatedAt: "desc" }); // (latest to oldest)
+
+  res.status(200).json(chats);
+});
+
+const fetchDiscussChats = asyncHandler(async (req, res) => {
+  const loggedInUserId = req.user?._id;
+
+  // Fetch all the chats for the currently logged-in user
+  const chats = await ChatModel.find({
+    users: { $elemMatch: { $eq: loggedInUserId }}, isGroupChat: '3'
   })
     .populate("users", "-password -notifications")
     .populate("groupAdmins", "-password -notifications")
@@ -123,6 +243,57 @@ const createGroupChat = asyncHandler(async (req, res) => {
 
   res.status(201).json(populatedGroup);
 });
+
+const createTeamChat = asyncHandler(async (req, res) => {
+  const displayPic = req.file;
+  let { chatName, users } = req.body;
+  const loggedInUserId = req.user?._id;
+
+  if (!chatName || !users) {
+    res.status(400);
+    throw new Error("Please Enter All the Fields");
+  }
+  // Since users array was stringified before sending it
+  users = JSON.parse(users);
+
+  if (users.length < 2) {
+    res.status(400);
+    throw new Error("Minimum of 3 Users Needed to Create a Team");
+  }
+  // Since Team includes loggedInUser too
+  users = [loggedInUserId, ...users];
+
+  let displayPicData;
+  // If display pic not selected, then set it as the default one
+  if (!displayPic) {
+    displayPicData = {
+      cloudinary_id: "",
+      chatDisplayPic: process.env.DEFAULT_GROUP_DP,
+    };
+  } else {
+    const uploadResponse = await cloudinary.uploader.upload(displayPic.path);
+    displayPicData = {
+      cloudinary_id: uploadResponse.public_id,
+      chatDisplayPic: uploadResponse.secure_url,
+    };
+    deleteFile(displayPic.path);
+  }
+
+  const createdTeam = await ChatModel.create({
+    chatName,
+    users,
+    isGroupChat: 1,
+    groupAdmins: [loggedInUserId],
+    ...displayPicData,
+  });
+
+  const populatedTeam = await ChatModel.findById(createdTeam._id)
+    .populate("users", "-password -notifications")
+    .populate("groupAdmins", "-password -notifications");
+
+  res.status(201).json(populatedTeam);
+});
+
 
 const deleteGroupDP = asyncHandler(async (req, res) => {
   const { currentDP, cloudinary_id, chatId } = req.body;
@@ -351,8 +522,13 @@ const dismissAsAdmin = asyncHandler(async (req, res) => {
 
 export {
   createOrRetrieveChat,
+  createOrRetrieveTeamChat,
   fetchChats,
+  fetchTeamChats,
+  fetchGroupChats,
+  fetchDiscussChats,
   createGroupChat,
+  createTeamChat,
   deleteGroupDP,
   updateGroupDP,
   updateGroupName,

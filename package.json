@@ -17,7 +17,8 @@
     "express",
     "node",
     "mongodb",
-    "mern"
+    "mern",
+    "chat"
   ],
   "author": "WindAssassin1104",
   "license": "ISC",
@@ -36,6 +37,6 @@
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.20"
   }
 }

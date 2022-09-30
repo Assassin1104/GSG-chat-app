@@ -1,8 +1,8 @@
 import { GroupAdd, Search } from "@mui/icons-material";
 
-const GettingStarted = () => {
+const GettingStarted = (props) => {
   const iconWrapperStyles = "text-light border d-inline-block rounded-pill";
-
+  const labelTab = ['Team', 'Group', 'Discussion']
   return (
     <div
       className="w-75 mt-4 mx-auto"
@@ -24,7 +24,7 @@ const GettingStarted = () => {
         >
           <GroupAdd />
         </span>{" "}
-        button to search members and create a discussion chat.
+        button to search members and create a {labelTab[props.labelIndex]} chat.
       </p>
       <p style={{ color: "#F2AFEC" }}>
         If you're not sure what to search, enter{" "}
@@ -34,8 +34,8 @@ const GettingStarted = () => {
         in search box to list all users.
       </p>
       <p>
-        After creating a discussion, click the discussion avatar at top-left of messages
-        view, for receiver/discussion info.
+        After creating a {labelTab[props.labelIndex]}, click the {labelTab[props.labelIndex]} avatar at top-left of messages
+        view, for receiver/{labelTab[props.labelIndex]} info.
       </p>
     </div>
   );

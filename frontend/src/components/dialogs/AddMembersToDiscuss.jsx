@@ -4,7 +4,7 @@ import axios from "../../utils/axios";
 import { debounce, getAxiosConfig, truncateString } from "../../utils/appUtils";
 import UserListItem from "../utils/UserListItem";
 import SearchInput from "../utils/SearchInput";
-import NewGroupBody from "./NewGroupBody";
+import NewDiscussBody from "./NewDiscussBody";
 import ChildDialog from "../utils/ChildDialog";
 import LoadingList from "../utils/LoadingList";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +13,7 @@ import { selectChildDialogState } from "../../store/slices/ChildDialogSlice";
 import { displayToast } from "../../store/slices/ToastSlice";
 import { setDialogAction } from "../../store/slices/CustomDialogSlice";
 
-const AddMembersToGroup = ({ getAddedMembers, forCreateGroup }) => {
+const AddMembersToDiscuss = ({ getAddedMembers, forCreateGroup }) => {
   const { loggedInUser, groupInfo } = useSelector(selectAppState);
   const { childDialogMethods } = useSelector(selectChildDialogState);
   const dispatch = useDispatch();
@@ -51,9 +51,9 @@ const AddMembersToGroup = ({ getAddedMembers, forCreateGroup }) => {
     setShowDialogActions(false);
     setShowDialogClose(false);
     dispatch(setGroupInfo(groupData));
-    setChildDialogBody(<NewGroupBody closeChildDialog={closeChildDialog} />);
+    setChildDialogBody(<NewDiscussBody closeChildDialog={closeChildDialog} />);
     displayChildDialog({
-      title: "Create New Group",
+      title: "Create New Discuss",
     });
   };
 
@@ -217,4 +217,4 @@ const AddMembersToGroup = ({ getAddedMembers, forCreateGroup }) => {
   );
 };
 
-export default AddMembersToGroup;
+export default AddMembersToDiscuss;

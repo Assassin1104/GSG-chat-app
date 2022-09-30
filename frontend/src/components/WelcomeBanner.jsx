@@ -24,7 +24,7 @@ const WelcomeBanner = ({ isNewUser }) => {
           👋
           <br />
           <br />
-          {loggedInUser._id === '633078842cabe732fe973b55' ? <p>You Are SuperAdmin</p> : <p>You Are Member</p>}
+          {loggedInUser.email === 'lavrin110413@gmail.com' ? <p>You Are SuperAdmin</p> : <p>You Are Member</p>}
         </h2>
       )}
       <LottieAnimation
