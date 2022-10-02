@@ -13,6 +13,8 @@ import getCustomTooltip from "./utils/CustomTooltip";
 import axios from "../utils/axios";
 import ViewProfileBody from "./dialogs/ViewProfileBody";
 import GroupInfoBody from "./dialogs/GroupInfoBody";
+import TeamInfoBody from "./dialogs/TeamInfoBody";
+import DiscussInfoBody from "./dialogs/DiscussInfoBody";
 import LoadingMsgs from "./utils/LoadingMsgs";
 import FullSizeImage from "./utils/FullSizeImage";
 import Message from "./utils/Message";
@@ -24,6 +26,8 @@ import {
   setClientSocket,
   setFetchMsgs,
   setGroupInfo,
+  setTeamInfo,
+  setDiscussInfo,
   setLoggedInUser,
   setSelectedChat,
   setSocketConnected,
@@ -758,12 +762,26 @@ const MessagesView = ({
     dispatch(displayDialog({ title: "View Profile" }));
   };
 
+  const openTeamInfoDialog = () => {
+    // Open group info dialog
+    dispatch(setTeamInfo(selectedChat));
+    dispatch(setShowDialogActions(false));
+    setDialogBody(<TeamInfoBody messages={messages} />);
+    dispatch(displayDialog({ title: "Team Info" }));
+  };
   const openGroupInfoDialog = () => {
     // Open group info dialog
     dispatch(setGroupInfo(selectedChat));
     dispatch(setShowDialogActions(false));
     setDialogBody(<GroupInfoBody messages={messages} />);
-    dispatch(displayDialog({ title: "Discussion Info" }));
+    dispatch(displayDialog({ title: "Group Info" }));
+  };
+  const openDiscussInfoDialog = () => {
+    // Open group info dialog
+    dispatch(setDiscussInfo(selectedChat));
+    dispatch(setShowDialogActions(false));
+    setDialogBody(<DiscussInfoBody messages={messages} />);
+    dispatch(displayDialog({ title: "Discuss Info" }));
   };
 
   // Open delete msg confirm dialog
@@ -800,7 +818,9 @@ const MessagesView = ({
         <>
           <MsgsHeader
             closeChat={closeChat}
+            openTeamInfoDialog={openTeamInfoDialog}
             openGroupInfoDialog={openGroupInfoDialog}
+            openDiscussInfoDialog={openDiscussInfoDialog}
             openViewProfileDialog={openViewProfileDialog}
             hideEmojiPicker={hideEmojiPicker}
             CustomTooltip={CustomTooltip}

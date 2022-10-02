@@ -106,7 +106,6 @@ const authenticateUser = asyncHandler(async (req, res) => {
       },
     ],
   });
-
   // Check if a user with entered email exists and check if entered password
   // matches the stored user password
   if (user && (await user.matchPasswords(password))) {
@@ -117,6 +116,7 @@ const authenticateUser = asyncHandler(async (req, res) => {
       notifications: user.notifications,
       cloudinary_id: user.cloudinary_id,
       profilePic: user.profilePic,
+      groupAdmin: user.groupAdmins,
       token: generateToken(user._id),
       /* Expire session after 15 days */
       expiryTime: Date.now() + 15 * 24 * 60 * 60 * 1000,

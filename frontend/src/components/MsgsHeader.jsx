@@ -6,15 +6,79 @@ import { getOneToOneChatReceiver, truncateString } from "../utils/appUtils";
 
 const MsgsHeader = ({
   closeChat,
+  openTeamInfoDialog,
   openGroupInfoDialog,
+  openDiscussInfoDialog,
   openViewProfileDialog,
   hideEmojiPicker,
   CustomTooltip,
 }) => {
   const { loggedInUser, selectedChat } = useSelector(selectAppState);
-  const chatName = selectedChat?.isGroupChat
-    ? selectedChat?.chatName
-    : getOneToOneChatReceiver(loggedInUser, selectedChat?.users)?.name;
+  const chatType = selectedChat?.isGroupChat;
+  console.log(chatType);
+  
+
+  const renderInfoSwitch = (chatType) => {
+    switch (chatType) {
+      case '0':
+        return 'View Profile';
+      case '1':
+        return 'Team Info';
+      case '2':
+        return 'Group Info';
+      case '3':
+        return 'Discuss Info';
+      default:
+        return 'none';
+    }
+  };
+
+  const renderNameSwitch = (chatType) => {
+    switch (chatType) {
+      case '0':
+        return getOneToOneChatReceiver(loggedInUser, selectedChat?.users)?.name;
+      case '1':
+        return selectedChat?.chatName;
+      case '2':
+        return selectedChat?.chatName;
+      case '3':
+        return selectedChat?.chatName;
+      default:
+        return getOneToOneChatReceiver(loggedInUser, selectedChat?.users)?.name;
+    }
+  };
+  const chatName = renderNameSwitch(chatType);
+
+  const renderOpenDialogSwitch = (chatType) => {
+    switch (chatType) {
+      case '0':
+        return openViewProfileDialog;
+      case '1':
+        return openTeamInfoDialog;
+      case '2':
+        return openGroupInfoDialog;
+      case '3':
+        return openDiscussInfoDialog;
+      default:
+        return openViewProfileDialog;
+    }
+  };
+
+  const renderAvatarSwitch = (chatType) => {
+    switch (chatType) {
+      case '0':
+        return getOneToOneChatReceiver(loggedInUser, selectedChat?.users)?.profilePic || "";
+      case '1':
+        return selectedChat?.chatDisplayPic;
+      case '2':
+        return selectedChat?.chatDisplayPic;
+      case '3':
+        return selectedChat?.chatDisplayPic;
+      default:
+        return openViewProfileDialog;
+    }
+  };
+
   return (
     <section
       className={`messagesHeader pointer-event d-flex justify-content-start 
@@ -34,7 +98,7 @@ const MsgsHeader = ({
         </IconButton>
       </CustomTooltip>
       <CustomTooltip
-        title={selectedChat?.isGroupChat ? "Discussion Info" : "View Profile"}
+        title={renderInfoSwitch(chatType)}
         placement="bottom-start"
         arrow
       >
@@ -44,19 +108,10 @@ const MsgsHeader = ({
             ":hover": { backgroundColor: "#aaaaaa20" },
           }}
           className="pointer ms-0 ms-md-4"
-          onClick={
-            selectedChat?.isGroupChat
-              ? openGroupInfoDialog
-              : openViewProfileDialog
-          }
+          onClick={renderOpenDialogSwitch(chatType)}
         >
           <Avatar
-            src={
-              selectedChat?.isGroupChat
-                ? selectedChat?.chatDisplayPic
-                : getOneToOneChatReceiver(loggedInUser, selectedChat?.users)
-                    ?.profilePic || ""
-            }
+            src={renderAvatarSwitch(chatType)}
             alt={"receiverAvatar"}
           />
         </IconButton>

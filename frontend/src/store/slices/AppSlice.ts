@@ -4,6 +4,8 @@ import {
   ChatType,
   falsyType,
   GroupInfo,
+  TeamInfo,
+  DiscussInfo,
   UserType,
 } from "../../utils/AppTypes";
 import type { RootState } from "../store";
@@ -13,6 +15,18 @@ const initialState: AppState = {
   selectedChat: null,
   refresh: false,
   groupInfo: {
+    chatDisplayPic: null,
+    chatDisplayPicUrl: process.env.REACT_APP_DEFAULT_GROUP_DP,
+    chatName: "",
+    users: [],
+  },
+  teamInfo: {
+    chatDisplayPic: null,
+    chatDisplayPicUrl: process.env.REACT_APP_DEFAULT_GROUP_DP,
+    chatName: "",
+    users: [],
+  },
+  discussInfo: {
     chatDisplayPic: null,
     chatDisplayPicUrl: process.env.REACT_APP_DEFAULT_GROUP_DP,
     chatName: "",
@@ -41,6 +55,12 @@ const AppSlice = createSlice({
     setGroupInfo: (state, action: PayloadAction<GroupInfo>) => {
       state.groupInfo = action.payload;
     },
+    setTeamInfo: (state, action: PayloadAction<TeamInfo>) => {
+      state.teamInfo = action.payload;
+    },
+    setDiscussInfo: (state, action: PayloadAction<DiscussInfo>) => {
+      state.discussInfo = action.payload;
+    },
     setFetchMsgs: (state, action: PayloadAction<boolean>) => {
       state.fetchMsgs = action.payload;
     },
@@ -61,6 +81,8 @@ export const {
   setSelectedChat,
   toggleRefresh,
   setGroupInfo,
+  setTeamInfo,
+  setDiscussInfo,
   setFetchMsgs,
   setDeleteNotifsOfChat,
   setClientSocket,

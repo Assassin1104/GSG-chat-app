@@ -69,6 +69,9 @@ const Login = () => {
         { email, password },
         config as AxiosRequestConfig
       );
+      console.log(data);
+      // console.log(data[1].isGroupChat);
+      // const adminData = await axios.get()
       // Success toast : login successful
       dispatch(
         displayToast({

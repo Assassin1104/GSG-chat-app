@@ -89,4 +89,18 @@ router.put("/group/delete", authorizeUser, deleteGroupChat);
 router.post("/group/make-admin", authorizeUser, makeGroupAdmin);
 router.put("/group/dismiss-admin", authorizeUser, dismissAsAdmin);
 
+// router.put("/teams/update-name", authorizeUser, updateTeamName);
+// router.put("/teams/remove", authorizeUser, removeUserFromTeam);
+// router.post("/teams/add", authorizeUser, addUsersToTeam);
+// router.put("/teams/delete", authorizeUser, deleteTeamChat);
+// router.post("/teams/make-admin", authorizeUser, makeTeamAdmin);
+// router.put("/teams/dismiss-admin", authorizeUser, dismissAsAdminTeam);
+
+// router.put("/discuss/update-name", authorizeUser, updateDiscussName);
+// router.put("/discuss/remove", authorizeUser, removeUserFromDiscuss);
+// router.post("/discuss/add", authorizeUser, addUsersToDiscuss);
+// router.put("/discuss/delete", authorizeUser, deleteDiscussChat);
+// router.post("/discuss/make-admin", authorizeUser, makeDiscussAdmin);
+// router.put("/discuss/dismiss-admin", authorizeUser, dismissAsAdminDiscuss);
+
 export default router;

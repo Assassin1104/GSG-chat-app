@@ -199,7 +199,7 @@ const ChatListView = ({
         .map((chat) => {
           const { isGroupChat, users } = chat;
 
-          if (isGroupChat === 0) {
+          if (isGroupChat === '0') {
             const receiver = getOneToOneChatReceiver(loggedInUser, users);
             chat["chatName"] = receiver?.name;
             chat["receiverEmail"] = receiver?.email;
@@ -365,7 +365,8 @@ const ChatListView = ({
           onChange={handleChange}
           indicatorColor="secondary"
           textColor="inherit"
-          variant="fullWidth"
+          variant="scrollable"
+          scrollButtons="auto"
           aria-label="full width tabs example"
         >
           <Tab label="Members" {...a11yProps(0)} />
@@ -380,9 +381,9 @@ const ChatListView = ({
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={valueTab} index={0} dir={theme.direction}>
-        <section className="position-relative">
+          <section className="position-relative">
             <p className="chatListHeader fw-bold fs-4 rounded-pill bg-info bg-opacity-10 py-2">
-              MEMBERS             
+              MEMBERS
             </p>
           </section>
           {/* Search Bar */}
@@ -451,7 +452,7 @@ const ChatListView = ({
                     ? `Hi ${truncateString(loggedInUser?.name?.split(" ")[0], 12, 9) ||
                     "There"
                     } 😎`
-                    : "No Discussions Found"}
+                    : "No Members Found"}
                 </span>
                 {chats?.length === 0 && <GettingStarted />}
               </>
@@ -556,7 +557,7 @@ const ChatListView = ({
           </section>
         </TabPanel>
         <TabPanel value={valueTab} index={2} dir={theme.direction}>
-        <section className="position-relative">
+          <section className="position-relative">
             <p className="chatListHeader fw-bold fs-4 rounded-pill bg-info bg-opacity-10 py-2">
               GROUPS
               {/* Create Group Chat */}
@@ -653,7 +654,7 @@ const ChatListView = ({
           </section>
         </TabPanel>
         <TabPanel value={valueTab} index={3} dir={theme.direction}>
-        <section className="position-relative">
+          <section className="position-relative">
             <p className="chatListHeader fw-bold fs-4 rounded-pill bg-info bg-opacity-10 py-2">
               DISCUSSIONS
               {/* Create Group Chat */}

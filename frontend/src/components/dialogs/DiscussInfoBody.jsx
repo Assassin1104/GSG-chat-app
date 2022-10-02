@@ -130,7 +130,7 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
   };
 
   const updateGroupName = async (options) => {
-    if (!updatedName) return displayWarning("Please Enter Valid Group Name");
+    if (!updatedName) return displayWarning("Please Enter Valid Discussion Name");
 
     dispatch(setLoading(true));
     const config = getAxiosConfig({ loggedInUser });
@@ -147,14 +147,14 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
           updatedGroup: data,
         });
       }
-      displaySuccess("Group Name Updated Successfully");
+      displaySuccess("Discussion Name Updated Successfully");
 
       dispatch(setLoading(false));
       updateView(data);
       if (options?.enterKeyClicked) closeChildDialog();
       else return "profileUpdated";
     } catch (error) {
-      displayError(error, "Couldn't Update Group Name");
+      displayError(error, "Couldn't Update Discussion Name");
       dispatch(setLoading(false));
     }
   };
@@ -201,12 +201,12 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
           updatedGroup: data,
         });
       }
-      displaySuccess("Group DP Updated Successfully");
+      displaySuccess("Discussion DP Updated Successfully");
       dispatch(setLoading(false));
       setUploading(false);
       updateView(data);
     } catch (error) {
-      displayError(error, "Couldn't Update Group DP");
+      displayError(error, "Couldn't Update Discussion DP");
       dispatch(setLoading(false));
       setUploading(false);
     }
@@ -232,12 +232,12 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
           updatedGroup: data,
         });
       }
-      displaySuccess("Group DP Deleted Successfully");
+      displaySuccess("Discussion DP Deleted Successfully");
       dispatch(setLoading(false));
       updateView(data);
       return "profileUpdated";
     } catch (error) {
-      displayError(error, "Couldn't Delete Group DP");
+      displayError(error, "Couldn't Delete Discussion DP");
       dispatch(setLoading(false));
     }
   };
@@ -278,7 +278,7 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
     } catch (error) {
       dispatch(
         displayToast({
-          title: "Couldn't Exit Group",
+          title: "Couldn't Exit Discussion",
           message: error.response?.data?.message || error.message,
           type: "error",
           duration: 4000,
@@ -322,12 +322,12 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
           deletedGroup: groupInfo,
         });
       }
-      displaySuccess("Group Deleted Successfully");
+      displaySuccess("Discussion Deleted Successfully");
       dispatch(setLoading(false));
       updateView(null);
       dispatch(hideDialog());
     } catch (error) {
-      displayError(error, "Couldn't Delete Group");
+      displayError(error, "Couldn't Delete Discussion");
       dispatch(setLoading(false));
     }
   };
@@ -339,10 +339,10 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
     setChildDialogBody(
       <>
         {groupMembers?.length === 1
-          ? `Since you're the only Group member, this Group will be 
+          ? `Since you're the only Discussion member, this Discussion will be 
             DELETED if you exit. Are you sure you want to exit?`
-          : `This Group will be removed from your chats. 
-             Are you sure you want to exit this Group?`}
+          : `This Discussion will be removed from your chats. 
+             Are you sure you want to exit this Discussion?`}
       </>
     );
     displayChildDialog({
@@ -359,13 +359,13 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
     setShowDialogClose(false);
     setChildDialogBody(
       <>
-        All messages and files related to this group will be deleted and this
-        group will be removed from the chats of ALL MEMBERS. Are you sure you
-        want to delete this group?
+        All messages and files related to this discussion will be deleted and this
+        discussion will be removed from the chats of ALL MEMBERS. Are you sure you
+        want to delete this discussion?
       </>
     );
     displayChildDialog({
-      title: "Delete Group",
+      title: "Delete Discussion",
       nolabel: "NO",
       yeslabel: "YES",
       loadingYeslabel: "Deleting...",
@@ -381,11 +381,11 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
       <EditNameBody
         originalName={groupInfo?.chatName}
         getUpdatedName={getUpdatedName}
-        placeholder="Enter New Group Name"
+        placeholder="Enter New Discussion Name"
       />
     );
     displayChildDialog({
-      title: "Edit Group Name",
+      title: "Edit Discussion Name",
       nolabel: "CANCEL",
       yeslabel: "SAVE",
       loadingYeslabel: "Saving...",
@@ -415,7 +415,7 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
 
   const addMembersToGroup = async () => {
     if (!isUserGroupAdmin)
-      return displayWarning("Only Admin Can Add Members to Group");
+      return displayWarning("Only Admin Can Add Members to Discussion");
 
     if (!addedMembers?.length)
       return displayWarning("Please Select Atleast 1 Member to Add");
@@ -437,12 +437,12 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
           updatedGroup: data,
         });
       }
-      displaySuccess("Successfully Added Member/s to Group");
+      displaySuccess("Successfully Added Member/s to Discussion");
       dispatch(setLoading(false));
       updateView(data);
       return "profileUpdated";
     } catch (error) {
-      displayError(error, "Couldn't Add Members to Group");
+      displayError(error, "Couldn't Add Members to Discussion");
       dispatch(setLoading(false));
     }
   };
@@ -509,7 +509,7 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
             />
           </CustomTooltip>
 
-          <CustomTooltip title="Edit Group DP" placement="right" arrow>
+          <CustomTooltip title="Edit Discussion DP" placement="right" arrow>
             <i
               id="editProfilePic"
               tabIndex={2}
@@ -556,7 +556,7 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
               {truncateString(groupName, 25, 21)}
             </div>
           </CustomTooltip>
-          <CustomTooltip title="Edit Group Name" placement="top" arrow>
+          <CustomTooltip title="Edit Discussion Name" placement="top" arrow>
             <IconButton
               tabIndex={3}
               onKeyDown={clickOnKeydown}
@@ -620,8 +620,8 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
               groupMembers?.length !== 1
             ) {
               return displayWarning(
-                `Every group must have atleast 1 admin. Since 
-              you're the only group admin, you won't be allowed
+                `Every discussion must have atleast 1 admin. Since 
+              you're the only discussion admin, you won't be allowed
               to exit until you make someone else as the admin.`,
                 10000
               );
@@ -630,7 +630,7 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
           }}
         >
           <Logout className="text-light" style={{ marginLeft: "-30px" }} />
-          <span className="ms-2">Exit Group</span>
+          <span className="ms-2">Exit Discussion</span>
         </button>
       </section>
 
@@ -642,7 +642,7 @@ const GroupInfoBody = ({ messages, deleteNotifications }) => {
             onClick={openDeleteGroupConfirmDialog}
           >
             <Delete className="text-light" style={{ marginLeft: "-20px" }} />
-            <span className="ms-2">Delete Group</span>
+            <span className="ms-2">Delete Discussion</span>
           </button>
         </section>
       )}

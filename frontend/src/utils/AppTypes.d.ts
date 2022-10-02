@@ -33,7 +33,7 @@ export interface ChatInterface {
   cloudinary_id: string;
   createdAt: string;
   groupAdmins?: UserType[];
-  isGroupChat: boolean;
+  isGroupChat: string;
   lastMessage?: MessageType;
   updatedAt?: string;
   removedUser?: UserType;
@@ -68,12 +68,16 @@ export interface GroupInfoInterface {
   users: UserType[];
 }
 export type GroupInfo = GroupInfoInterface | falsyType;
+export type TeamInfo = TeamInfoInterface | falsyType;
+export type DiscussInfo = DiscussInfoInterface | falsyType;
 
 export interface AppState {
   loggedInUser: UserType;
   selectedChat: ChatType;
   refresh: boolean;
   groupInfo: GroupInfo;
+  teamInfo: TeamInfo;
+  discussInfo: DiscussInfo;
   fetchMsgs: boolean;
   deleteNotifsOfChat: string;
   clientSocket: any;
